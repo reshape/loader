@@ -4,7 +4,6 @@
 [![tests](https://img.shields.io/travis/reshape/loader.svg?style=flat-square)](https://travis-ci.org/reshape/loader?branch=master)
 [![dependencies](https://img.shields.io/david/reshape/loader.svg?style=flat-square)](https://david-dm.org/reshape/loader)
 [![coverage](https://img.shields.io/coveralls/reshape/loader.svg?style=flat-square)](https://coveralls.io/r/reshape/loader?branch=master)
-[![gitter](https://img.shields.io/gitter/room/reshape/loader.svg?style=flat-square)](https://gitter.im/reshape/loader?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge")
 
 A reshape loader for webpack
 
