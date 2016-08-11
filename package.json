@@ -18,6 +18,7 @@
     "nyc": "^7.0.0",
     "reshape-custom-elements": "^0.1.0",
     "reshape-expressions": "^0.1.0",
+    "snazzy": "^4.0.1",
     "source-loader": "^0.2.0",
     "standard": "^7.1.2",
     "sugarml": "^0.2.0",
@@ -36,9 +37,9 @@
   "main": "lib",
   "repository": "reshape/loader",
   "scripts": {
-    "lint": "standard | snazzy",
-    "test": "npm run lint && ava",
     "coverage": "nyc ava && nyc report --reporter=html",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls"
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "lint": "standard | snazzy",
+    "test": "npm run lint && ava"
   }
 }
