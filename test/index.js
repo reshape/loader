@@ -11,7 +11,15 @@ const fixtures = path.join(__dirname, 'fixtures')
 test('basic', (t) => {
   return webpackCompile('basic', [customElements()])
     .then(({outputPath, src}) => {
-      t.truthy(src.match(/<div class=\\"custom\\">hello world<\/div>/))
+      t.truthy(src.match(/hello world<\/div>/))
+      fs.unlinkSync(outputPath)
+    })
+})
+
+test('callWith option', (t) => {
+  return webpackCompile('expression', { plugins: exp(), callWith: { planet: 'world' } })
+    .then(({outputPath, src}) => {
+      t.truthy(src.match(/<p>hello world!<\/p>/))
       fs.unlinkSync(outputPath)
     })
 })
@@ -19,7 +27,7 @@ test('basic', (t) => {
 test('config function', (t) => {
   return webpackCompile('basic', () => [customElements()])
     .then(({outputPath, src}) => {
-      t.truthy(src.match(/<div class=\\"custom\\">hello world<\/div>/))
+      t.truthy(src.match(/hello world<\/div>/))
       fs.unlinkSync(outputPath)
     })
 })
@@ -27,7 +35,7 @@ test('config function', (t) => {
 test('config object', (t) => {
   return webpackCompile('basic', { plugins: [customElements()] })
     .then(({outputPath, src}) => {
-      t.truthy(src.match(/<div class=\\"custom\\">hello world<\/div>/))
+      t.truthy(src.match(/hello world<\/div>/))
       fs.unlinkSync(outputPath)
     })
 })
@@ -35,7 +43,7 @@ test('config object', (t) => {
 test('plugin packs', (t) => {
   return webpackCompile('basic', { special: [customElements()] }, '?pack=special')
     .then(({outputPath, src}) => {
-      t.truthy(src.match(/<div class=\\"custom\\">hello world<\/div>/))
+      t.truthy(src.match(/hello world<\/div>/))
       fs.unlinkSync(outputPath)
     })
 })
@@ -45,7 +53,7 @@ test('custom parser', (t) => {
     plugins: [customElements()],
     parser: sugarml
   }).then(({outputPath, src}) => {
-    t.truthy(src.match(/<div class=\\"custom\\">hello world<\/div>/))
+    t.truthy(src.match(/hello world<\/div>/))
     fs.unlinkSync(outputPath)
   })
 })
@@ -61,7 +69,7 @@ test('invalid config', (t) => {
 
 test('function called with correct context', (t) => {
   return webpackCompile('locals', (ctx) => {
-    return [exp({ locals: { foo: ctx.resourcePath } })]
+    return { plugins: exp(), callWith: { foo: ctx.resourcePath } }
   }).then(({outputPath, src}) => {
     t.truthy(src.match(/test\/fixtures\/locals\/index\.html/))
     fs.unlinkSync(outputPath)

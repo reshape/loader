@@ -1,4 +1,6 @@
 .travis.yml
 .editorconfig
-CONTRIBUTING.md
+contributing.md
 test
+.nyc_output
+coverage

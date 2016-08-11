@@ -32,6 +32,35 @@ module: {
 reshape: [/* plugins here */]
 ```
 
+### Producing Static HTML
+
+Reshape produces a function as its output by default, however some use-cases call for returning the static html as the output. If this is necessary, you can use the `callWith` argument along with any params you want to pass to the function (such a local variables) to have reshape-loader export a compiled html string. For example:
+
+```html
+<p>Hello {{ planet }}!</p>
+```
+
+```js
+// webpack.config.js
+const expressions = require('reshape-expressions')
+
+module: {
+  loaders: [{
+    test: /\.html$/,
+    loader: 'html!reshape'
+  }]
+},
+reshape: {
+  plugins: [expressions()]
+  callWith: { planet: 'world' }
+}
+```
+
+```js
+const html = require('./index.html')
+console.log(html) // <p>Hello world!</p>
+```
+
 ### Plugin Packs
 
 If you need to apply different sets of plugins to different groups of files, you can use a **plugin pack**. Just add `pack=[name]` as a querystring option, and return an object from the `reshape` config option with a key matching the pack name, and the value being an array of plugins.
@@ -89,5 +118,5 @@ reshape: {
 
 ## License & Contributing
 
-- Licensed under [MIT](LICENSE)
-- See [contributing guidelines](CONTRIBUTING.md)
+- Licensed under [MIT](LICENSE.md)
+- See [contributing guidelines](contributing.md)
