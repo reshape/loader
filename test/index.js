@@ -12,7 +12,7 @@ test('basic', (t) => {
   return webpackCompile('basic', [customElements()])
     .then(({outputPath, src}) => {
       t.truthy(src.match(/hello world<\/div>/))
-      fs.unlinkSync(outputPath)
+      // fs.unlinkSync(outputPath)
     })
 })
 
@@ -76,6 +76,19 @@ test('function called with correct context', (t) => {
   })
 })
 
+// hackiest test of all time!
+test('context exported correctly', (t) => {
+  const oldLog = console.log
+  console.log = (x) => t.truthy(x === '<p>hello world!</p>\n')
+  return webpackCompileNoSource('expression-log', (ctx) => {
+    return [exp()]
+  }).then(({outputPath, src}) => {
+    eval(src) // eslint-disable-line
+    console.log = oldLog
+    fs.unlinkSync(outputPath)
+  })
+})
+
 // Utility: compile a fixture with webpack, return results
 function webpackCompile (name, config, qs = '') {
   const testPath = path.join(fixtures, name)
@@ -87,6 +100,26 @@ function webpackCompile (name, config, qs = '') {
     resolveLoader: { root: path.resolve('../lib') },
     module: {
       loaders: [{ test: /\.html$/, loader: `source!index${qs}` }]
+    },
+    reshape: config
+  }).then((stats) => {
+    if (stats.compilation.errors.length) throw stats.compilation.errors
+    const src = fs.readFileSync(outputPath, 'utf8')
+    return {outputPath, src}
+  }).catch((err) => { throw {outputPath, err} }) // eslint-disable-line
+}
+
+// Utility: compile a fixture with webpack, return results
+function webpackCompileNoSource (name, config, qs = '') {
+  const testPath = path.join(fixtures, name)
+  const outputPath = path.join(testPath, 'bundle.js')
+
+  return node.call(webpack, {
+    entry: { output: [path.join(testPath, 'app.js')] },
+    output: { path: testPath },
+    resolveLoader: { root: path.resolve('../lib') },
+    module: {
+      loaders: [{ test: /\.html$/, loader: `index${qs}` }]
     },
     reshape: config
   }).then((stats) => {
