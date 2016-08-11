@@ -15,7 +15,7 @@ npm i html-loader reshape-loader --save
 
 ## Usage
 
-The reshape loader must be used with at least one other loader in order to integrate with webpack correctly. For most use cases, the [html-loader](https://github.com/webpack/html-loader) is recommended. If you want to export the html string directly for use in javascript or webpack plugins, we recommend the [source-loader](https://github.com/static-dev/source-loader). Whichever loader you choose, it should be the first loader, followed by reshape, as you will see in the examples below.
+There are two distinct ways you can use this loader. By default, it will compile your templates and return a function which you can get by `require`-ing the original template path. It can also produce static html if used with the `callWith` option.
 
 Options can be passed through a `reshape` option directly on the webpack config object. It accepts an array, an object, or a function that returns an array or object. If it's an array, it should contain plugins. If it's an object, it can contain a `plugins` key, which is an array of plugins and an optional `parser` key which allows you to pass in a custom parser. Any other key will apply to the `pack` querystring parameter, documented below.
 
@@ -26,7 +26,7 @@ Basic configuration example:
 module: {
   loaders: [{
     test: /\.html$/,
-    loader: 'html!reshape'
+    loader: 'reshape'
   }]
 },
 reshape: [/* plugins here */]
@@ -61,6 +61,8 @@ const html = require('./index.html')
 console.log(html) // <p>Hello world!</p>
 ```
 
+If you do this, you will want at least one other loader in order to integrate the returned source with webpack correctly. For most use cases, the [html-loader](https://github.com/webpack/html-loader) is recommended. If you want to export the html string directly for use in javascript or webpack plugins, we recommend the [source-loader](https://github.com/static-dev/source-loader). Whichever loader you choose, it should be the first loader, followed by reshape, as seen in the example above.
+
 ### Plugin Packs
 
 If you need to apply different sets of plugins to different groups of files, you can use a **plugin pack**. Just add `pack=[name]` as a querystring option, and return an object from the `reshape` config option with a key matching the pack name, and the value being an array of plugins.
@@ -70,7 +72,7 @@ If you need to apply different sets of plugins to different groups of files, you
 module: {
   loaders: [{
     test: /\\.special\.html$/,
-    loader: 'html!reshape?pack=special'
+    loader: 'reshape?pack=special'
   }]
 },
 reshape: {
@@ -88,7 +90,7 @@ You can also return a function from the `reshape` config value, if you need to f
 module: {
   loaders: [{
     test: /\.html$/,
-    loader: 'html!reshape'
+    loader: 'reshape'
   }]
 },
 reshape: (ctx) => {
@@ -106,8 +108,8 @@ const sugarml = require('sugarml')
 
 module: {
   loaders: [{
-    test: /\\.special\.html$/,
-    loader: 'html!reshape?pack=special'
+    test: /\.html$/,
+    loader: 'reshape'
   }]
 },
 reshape: {
