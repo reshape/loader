@@ -37,9 +37,10 @@
   "main": "lib",
   "repository": "reshape/loader",
   "scripts": {
-    "coverage": "nyc ava && nyc report --reporter=html",
+    "coverage": "nyc ava && nyc report --reporter=html && open ./coverage/index.html",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "standard | snazzy",
-    "test": "npm run lint && ava"
+    "pretest": "npm run lint",
+    "test": "nyc ava"
   }
 }

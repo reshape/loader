@@ -17,7 +17,7 @@ test('basic', (t) => {
 })
 
 test('callWith option', (t) => {
-  return webpackCompile('expression', { plugins: exp(), callWith: { planet: 'world' } })
+  return webpackCompile('expression', { plugins: exp(), callWith: { planet: 'world' }, filename: 'test' })
     .then(({outputPath, src}) => {
       t.truthy(src.match(/<p>hello world!<\/p>/))
       fs.unlinkSync(outputPath)
