@@ -15,7 +15,7 @@ npm i html-loader reshape-loader --save
 
 ## Usage
 
-There are two distinct ways you can use this loader. By default, it will compile your templates and return a function which you can get by `require`-ing the original template path. It can also produce static html if used with the `callWith` option.
+There are two distinct ways you can use this loader. By default, it will compile your templates and return a function which you can get by `require`-ing the original template path. It can also produce static html if used with the `locals` option.
 
 Options can be passed through a `reshape` option directly on the webpack config object. It accepts an array, an object, or a function that returns an array or object. If it's an array, it should contain plugins. If it's an object, it can contain a `plugins` key, which is an array of plugins and an optional `parser` key which allows you to pass in a custom parser. Any other key will apply to the `pack` querystring parameter, documented below.
 
@@ -34,7 +34,7 @@ reshape: [/* plugins here */]
 
 ### Producing Static HTML
 
-Reshape produces a function as its output by default, however some use-cases call for returning the static html as the output. If this is necessary, you can use the `callWith` argument along with any params you want to pass to the function (such a local variables) to have reshape-loader export a compiled html string. For example:
+Reshape produces a function as its output by default, however some use-cases call for returning the static html as the output. If this is necessary, you can use the `locals` argument along with any params you want to pass to the function (such a local variables) to have reshape-loader export a compiled html string. For example:
 
 ```html
 <p>Hello {{ planet }}!</p>
@@ -52,7 +52,7 @@ module: {
 },
 reshape: {
   plugins: [expressions()]
-  callWith: { planet: 'world' }
+  locals: { planet: 'world' }
 }
 ```
 

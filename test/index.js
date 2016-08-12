@@ -12,14 +12,14 @@ test('basic', (t) => {
   return webpackCompile('basic', [customElements()])
     .then(({outputPath, src}) => {
       t.truthy(src.match(/hello world<\/div>/))
-      // fs.unlinkSync(outputPath)
+      fs.unlinkSync(outputPath)
     })
 })
 
-test('callWith option', (t) => {
-  return webpackCompile('expression', { plugins: exp(), callWith: { planet: 'world' }, filename: 'test' })
+test('locals option', (t) => {
+  return webpackCompile('expression', { plugins: exp(), locals: { planet: 'world' }, filename: 'test' })
     .then(({outputPath, src}) => {
-      t.truthy(src.match(/<p>hello world!<\/p>/))
+      t.truthy(src.match(/module\.exports = "<p>hello world!<\/p>\\n"/))
       fs.unlinkSync(outputPath)
     })
 })
@@ -69,7 +69,7 @@ test('invalid config', (t) => {
 
 test('function called with correct context', (t) => {
   return webpackCompile('locals', (ctx) => {
-    return { plugins: exp(), callWith: { foo: ctx.resourcePath } }
+    return { plugins: exp(), locals: { foo: ctx.resourcePath } }
   }).then(({outputPath, src}) => {
     t.truthy(src.match(/test\/fixtures\/locals\/index\.html/))
     fs.unlinkSync(outputPath)
