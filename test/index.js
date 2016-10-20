@@ -48,6 +48,14 @@ test('plugin packs', (t) => {
     })
 })
 
+test('locals packs', (t) => {
+  return webpackCompile('expression', { plugins: [exp()], locals: { planet: 'world' } }, '?locals={"planet":"mars"}')
+    .then(({outputPath, src}) => {
+      t.truthy(src.match(/hello mars!<\/p>/))
+      fs.unlinkSync(outputPath)
+    })
+})
+
 test('custom parser', (t) => {
   return webpackCompile('custom_parser', {
     plugins: [customElements()],

@@ -81,6 +81,25 @@ reshape: {
 }
 ```
 
+### Local Packs?
+
+Listen, headlines are hard ok? The point is, if you need to change the locals you are passing through based on a specific loader configuration, you can also do this, much like the plugin packs. This also implicitly allows you to change the compile mode from outputting a template to outputting static html. For example, passing `reshape?locals=false` will set a specific loader configuration to produce a javascript template.
+
+Note that any value passed to the `locals` querystring must be valid JSON. If not, it will throw an error!
+
+```js
+// webpack.config.js
+module: {
+  loaders: [{
+    test: /\\.special\.html$/,
+    loader: 'reshape?locals={"foo": "not bar"}'
+  }]
+},
+reshape: {
+  locals: { foo: 'bar' }
+}
+```
+
 ### Using a Function
 
 You can also return a function from the `reshape` config value, if you need to for any reason. The function passes along the [loader context](https://webpack.github.io/docs/loaders.html#loader-context) as an argument, so you can get information about the file currently being processed from this and pass it to plugins if needed. For example:
