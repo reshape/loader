@@ -15,7 +15,7 @@
   "devDependencies": {
     "ava": "^0.16.0",
     "coveralls": "^2.11.9",
-    "nyc": "^8.0.0",
+    "nyc": "^9.0.1",
     "reshape-custom-elements": "^0.1.0",
     "reshape-expressions": "^0.1.0",
     "snazzy": "^4.0.1",
