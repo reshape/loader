@@ -105,7 +105,7 @@ function webpackCompile (name, config, qs = '') {
   return node.call(webpack, {
     entry: { output: [path.join(testPath, 'app.js')] },
     output: { path: testPath },
-    resolveLoader: { root: path.resolve('../lib') },
+    resolveLoader: { root: path.join(__dirname, '../lib') },
     module: {
       loaders: [{ test: /\.html$/, loader: `source!index${qs}` }]
     },
@@ -125,7 +125,7 @@ function webpackCompileNoSource (name, config, qs = '') {
   return node.call(webpack, {
     entry: { output: [path.join(testPath, 'app.js')] },
     output: { path: testPath },
-    resolveLoader: { root: path.resolve('../lib') },
+    resolveLoader: { root: path.join(__dirname, '../lib') },
     module: {
       loaders: [{ test: /\.html$/, loader: `index${qs}` }]
     },
