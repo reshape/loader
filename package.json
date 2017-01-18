@@ -35,9 +35,6 @@
   ],
   "license": "MIT",
   "main": "lib",
-  "peerDependencies": {
-    "reshape": "^0.4.0"
-  },
   "repository": "reshape/loader",
   "scripts": {
     "coverage": "nyc ava && nyc report --reporter=html && open ./coverage/index.html",
