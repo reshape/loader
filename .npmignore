@@ -4,3 +4,4 @@ contributing.md
 test
 .nyc_output
 coverage
+yarn.lock
