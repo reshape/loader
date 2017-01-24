@@ -9,30 +9,6 @@ const sugarml = require('sugarml')
 const fixtures = path.join(__dirname, 'fixtures')
 
 test('basic', (t) => {
-  return webpackCompile('basic', [customElements()])
-    .then(({outputPath, src}) => {
-      t.truthy(src.match(/hello world<\/div>/))
-      fs.unlinkSync(outputPath)
-    })
-})
-
-test('locals option', (t) => {
-  return webpackCompile('expression', { plugins: exp(), locals: { planet: 'world' }, filename: 'test' })
-    .then(({outputPath, src}) => {
-      t.truthy(src.match(/module\.exports = "<p>hello world!<\/p>\\n"/))
-      fs.unlinkSync(outputPath)
-    })
-})
-
-test('config function', (t) => {
-  return webpackCompile('basic', () => [customElements()])
-    .then(({outputPath, src}) => {
-      t.truthy(src.match(/hello world<\/div>/))
-      fs.unlinkSync(outputPath)
-    })
-})
-
-test('config object', (t) => {
   return webpackCompile('basic', { plugins: [customElements()] })
     .then(({outputPath, src}) => {
       t.truthy(src.match(/hello world<\/div>/))
@@ -40,18 +16,18 @@ test('config object', (t) => {
     })
 })
 
-test('plugin packs', (t) => {
-  return webpackCompile('basic', { special: [customElements()] }, '?pack=special')
+test('locals option', (t) => {
+  return webpackCompile('expression', { plugins: [exp()], locals: { planet: 'world' }, filename: 'test' })
     .then(({outputPath, src}) => {
-      t.truthy(src.match(/hello world<\/div>/))
+      t.truthy(src.match(/module\.exports = "<p>hello world!<\/p>\\n"/))
       fs.unlinkSync(outputPath)
     })
 })
 
-test('locals packs', (t) => {
-  return webpackCompile('expression', { plugins: [exp()], locals: { planet: 'world' } }, '?locals={"planet":"mars"}')
+test('config functions', (t) => {
+  return webpackCompile('basic', { plugins: () => [customElements()] })
     .then(({outputPath, src}) => {
-      t.truthy(src.match(/hello mars!<\/p>/))
+      t.truthy(src.match(/hello world<\/div>/))
       fs.unlinkSync(outputPath)
     })
 })
@@ -66,18 +42,29 @@ test('custom parser', (t) => {
   })
 })
 
-test('invalid config', (t) => {
-  return webpackCompile('custom_parser', 5)
-    .then(() => t.fail('invalid config, no error'))
-    .catch(({outputPath, err}) => {
-      t.truthy(err.toString().match(/Error: Configuration must return an array or object/))
+test('parser/generator function', (t) => {
+  function parser () { return sugarml }
+  parser.convert = true
+
+  return webpackCompile('custom_parser', { parser })
+    .then(({outputPath, src}) => {
+      t.truthy(src.match(/hello world<\/custom>/))
       fs.unlinkSync(outputPath)
     })
 })
 
+test('invalid config', (t) => {
+  return webpackCompile('custom_parser', 5)
+    .then(() => t.fail('invalid config, no error'))
+    .catch(({outputPath, err}) => {
+      t.truthy(err.toString().match(/WebpackOptionsValidationError: Invalid configuration object./))
+    })
+})
+
 test('function called with correct context', (t) => {
-  return webpackCompile('locals', (ctx) => {
-    return { plugins: exp(), locals: { foo: ctx.resourcePath } }
+  return webpackCompile('locals', {
+    plugins: [exp()],
+    locals: (ctx) => { return { foo: ctx.resourcePath } }
   }).then(({outputPath, src}) => {
     t.truthy(src.match(/test\/fixtures\/locals\/index\.html/))
     fs.unlinkSync(outputPath)
@@ -88,8 +75,8 @@ test('function called with correct context', (t) => {
 test('context exported correctly', (t) => {
   const oldLog = console.log
   console.log = (x) => t.truthy(x === '<p>hello world!</p>\n')
-  return webpackCompileNoSource('expression-log', (ctx) => {
-    return [exp()]
+  return webpackCompileNoSource('expression-log', {
+    plugins: [exp()]
   }).then(({outputPath, src}) => {
     eval(src) // eslint-disable-line
     console.log = oldLog
@@ -98,18 +85,22 @@ test('context exported correctly', (t) => {
 })
 
 // Utility: compile a fixture with webpack, return results
-function webpackCompile (name, config, qs = '') {
+function webpackCompile (name, config, qs = {}) {
   const testPath = path.join(fixtures, name)
   const outputPath = path.join(testPath, 'bundle.js')
 
   return node.call(webpack, {
-    entry: { output: [path.join(testPath, 'app.js')] },
+    entry: { bundle: [path.join(testPath, 'app.js')] },
     output: { path: testPath },
-    resolveLoader: { root: path.join(__dirname, '../lib') },
+    resolveLoader: { modules: [path.join(__dirname, '../lib'), path.join(__dirname, '../node_modules')] },
     module: {
-      loaders: [{ test: /\.html$/, loader: `source!index${qs}` }]
-    },
-    reshape: config
+      rules: [
+        {
+          test: /\.html$/,
+          use: [{ loader: `source-loader` }, { loader: 'index', options: config }]
+        }
+      ]
+    }
   }).then((stats) => {
     if (stats.compilation.errors.length) throw stats.compilation.errors
     const src = fs.readFileSync(outputPath, 'utf8')
@@ -118,18 +109,17 @@ function webpackCompile (name, config, qs = '') {
 }
 
 // Utility: compile a fixture with webpack, return results
-function webpackCompileNoSource (name, config, qs = '') {
+function webpackCompileNoSource (name, config) {
   const testPath = path.join(fixtures, name)
   const outputPath = path.join(testPath, 'bundle.js')
 
   return node.call(webpack, {
-    entry: { output: [path.join(testPath, 'app.js')] },
+    entry: { bundle: [path.join(testPath, 'app.js')] },
     output: { path: testPath },
-    resolveLoader: { root: path.join(__dirname, '../lib') },
+    resolveLoader: { modules: [path.join(__dirname, '../lib'), path.join(__dirname, '../node_modules')] },
     module: {
-      loaders: [{ test: /\.html$/, loader: `index${qs}` }]
-    },
-    reshape: config
+      rules: [{ test: /\.html$/, loader: `index`, options: config }]
+    }
   }).then((stats) => {
     if (stats.compilation.errors.length) throw stats.compilation.errors
     const src = fs.readFileSync(outputPath, 'utf8')
