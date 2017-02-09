@@ -5,6 +5,7 @@ const fs = require('fs')
 const node = require('when/node')
 const customElements = require('reshape-custom-elements')
 const exp = require('reshape-expressions')
+const include = require('reshape-include')
 const sugarml = require('sugarml')
 const fixtures = path.join(__dirname, 'fixtures')
 
@@ -84,6 +85,16 @@ test('context exported correctly', (t) => {
   })
 })
 
+test('dependencies reported correctly', (t) => {
+  return webpackCompile('dependencies', {
+    plugins: [include()]
+  }).then(({stats}) => {
+    t.truthy(stats.compilation.fileDependencies.some((fd) => {
+      return fd.match(/partial\.html/)
+    }))
+  })
+})
+
 // Utility: compile a fixture with webpack, return results
 function webpackCompile (name, config, qs = {}) {
   const testPath = path.join(fixtures, name)
@@ -104,7 +115,7 @@ function webpackCompile (name, config, qs = {}) {
   }).then((stats) => {
     if (stats.compilation.errors.length) throw stats.compilation.errors
     const src = fs.readFileSync(outputPath, 'utf8')
-    return {outputPath, src}
+    return {outputPath, src, stats}
   }).catch((err) => { throw {outputPath, err} }) // eslint-disable-line
 }
 

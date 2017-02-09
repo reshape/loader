@@ -3518,13 +3518,19 @@ reshape-expressions@^0.1.2:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/reshape-expressions/-/reshape-expressions-0.1.4.tgz#f4e92c159084a0dea7a70e9aca8402bfac381295"
 
+reshape-include@next:
+  version "0.3.0-0"
+  resolved "https://registry.yarnpkg.com/reshape-include/-/reshape-include-0.3.0-0.tgz#90326d8a7928c832e4b2fb103374ebac4462c555"
+  dependencies:
+    reshape-plugin-util "^0.2.0"
+
 reshape-parser@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/reshape-parser/-/reshape-parser-0.2.1.tgz#3d713188c0ae05b899e3528774aacc2aef147368"
   dependencies:
     parse5 "^2.1.5"
 
-reshape-plugin-util@reshape/plugin-util:
+reshape-plugin-util@^0.2.0, reshape-plugin-util@reshape/plugin-util:
   version "0.2.1"
   resolved "https://codeload.github.com/reshape/plugin-util/tar.gz/cde6184375b734448566d55553dfc5dd2af0be71"
   dependencies:
@@ -4021,16 +4027,7 @@ typedarray@~0.0.5:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-uglify-js@^2.6:
-  version "2.7.3"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.7.3.tgz#39b3a7329b89f5ec507e344c6e22568698ef4868"
-  dependencies:
-    async "~0.2.6"
-    source-map "~0.5.1"
-    uglify-to-browserify "~1.0.0"
-    yargs "~3.10.0"
-
-uglify-js@^2.7.5:
+uglify-js@^2.6, uglify-js@^2.7.5:
   version "2.7.5"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.7.5.tgz#4612c0c7baaee2ba7c487de4904ae122079f2ca8"
   dependencies:
