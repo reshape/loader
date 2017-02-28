@@ -20,7 +20,7 @@
     "reshape-expressions": "^0.1.2",
     "snazzy": "^6.0.0",
     "source-loader": "^0.2.0",
-    "standard": "^8.5.0",
+    "standard": "^9.0.0",
     "sugarml": "^0.5.0",
     "webpack": "^1.13.3",
     "when": "^3.7.7"
