@@ -9,7 +9,7 @@
   },
   "bugs": "https://github.com/reshape/loader/issues",
   "dependencies": {
-    "loader-utils": "^0.2.12",
+    "loader-utils": "^1.1.0",
     "reshape": "^0.4.1"
   },
   "devDependencies": {
