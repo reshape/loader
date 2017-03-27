@@ -88,10 +88,30 @@ test('context exported correctly', (t) => {
 test('dependencies reported correctly', (t) => {
   return webpackCompile('dependencies', {
     plugins: [include()]
-  }).then(({stats}) => {
+  }).then(({outputPath, stats}) => {
     t.truthy(stats.compilation.fileDependencies.some((fd) => {
       return fd.match(/partial\.html/)
     }))
+    fs.unlinkSync(outputPath)
+  })
+})
+
+test('custom plugin hook works', (t) => {
+  class CustomHookPlugin {
+    apply (compiler) {
+      compiler.plugin('beforeLoaderCompile', (opts) => {
+        Object.assign(opts.locals, { planet: 'changed' })
+      })
+    }
+  }
+
+  return webpackCompile('expression', {
+    locals: () => { return { planet: 'world' } },
+    plugins: [exp()],
+    webpackPlugins: [new CustomHookPlugin()]
+  }).then(({outputPath, src}) => {
+    t.truthy(src.match(/hello changed!<\/p>/))
+    fs.unlinkSync(outputPath)
   })
 })
 
@@ -104,6 +124,7 @@ function webpackCompile (name, config, qs = {}) {
     entry: { bundle: [path.join(testPath, 'app.js')] },
     output: { path: testPath },
     resolveLoader: { modules: [path.join(__dirname, '../lib'), path.join(__dirname, '../node_modules')] },
+    plugins: config.webpackPlugins || [],
     module: {
       rules: [
         {

@@ -14,16 +14,16 @@
   },
   "devDependencies": {
     "ava": "^0.19.0",
-    "coveralls": "^2.11.15",
+    "coveralls": "^2.12.0",
     "nyc": "^10.1.2",
     "reshape-custom-elements": "^0.1.0",
-    "reshape-expressions": "^0.1.2",
+    "reshape-expressions": "^0.1.5",
     "snazzy": "^6.0.0",
     "source-loader": "^0.2.0",
-    "standard": "^9.0.0",
+    "standard": "^9.0.2",
     "sugarml": "^0.5.0",
-    "webpack": "beta",
-    "when": "^3.7.7"
+    "webpack": "^2.3.2",
+    "when": "^3.7.8"
   },
   "engine": ">=6",
   "homepage": "https://github.com/reshape/loader",
