@@ -15,7 +15,7 @@ npm i reshape-loader --save
 
 ## Compatibility
 
-This loader is only compatible with webpack 2. If you want to use it for webpack 1, you can install version `0.4.2` and checkout the `webpack1` branch for the readme and docs!
+This loader is only compatible with webpack 2. If you want to use it for webpack 1, you can install version `0.4.2` and checkout the `webpack1` branch for the readme and docs.
 
 ## Usage
 
@@ -27,12 +27,14 @@ A basic configuration example:
 
 ```js
 // webpack.config.js
-module: {
-  rules: [{
-    test: /\.html$/,
-    loader: 'reshape',
-    options: { plugins: [/* plugins here */] }
-  }]
+module.exports = {
+  module: {
+    rules: [{
+      test: /\.html$/,
+      loader: 'reshape',
+      options: { plugins: [/* plugins here */] }
+    }]
+  }
 }
 ```
 
@@ -42,23 +44,28 @@ A more advanced example:
 
 ```js
 // webpack.config.js
+const somePlugin = require('./somePlugin')
+const parser = require('reshape-parser')
+const sugarml = require('sugarml')
 
 function parserFn (loaderContext) {
   return loaderContext.resourcePath.match(/\.sgr$/) ? sugarml : parser
 }
 parserFn.convert = true
 
-module: {
-  rules: [{
-    test: /\.html$/,
-    loader: 'reshape',
-    options: {
-      plugins: (loaderContext) => {
-        return [somePlugin({ file: loaderContext.resourcePath })]
-      },
-      parser: parserFn
-    }
-  }]
+module.exports = {
+  module: {
+    rules: [{
+      test: /\.html$/,
+      loader: 'reshape',
+      options: {
+        plugins: (loaderContext) => {
+          return [somePlugin({ file: loaderContext.resourcePath })]
+        },
+        parser: parserFn
+      }
+    }]
+  }
 }
 ```
 
@@ -76,20 +83,22 @@ Reshape produces a function as its output by default, however some use-cases cal
 // webpack.config.js
 const expressions = require('reshape-expressions')
 
-module: {
-  rules: [{
-    test: /\.html$/,
-    use: [
-      { loader: 'html' },
-      {
-        loader: 'reshape',
-        options: {
-          plugins: [expressions()]
-          locals: { planet: 'world' }
+module.exports = {
+  module: {
+    rules: [{
+      test: /\.html$/,
+      use: [
+        { loader: 'html' },
+        {
+          loader: 'reshape',
+          options: {
+            plugins: [expressions()],
+            locals: { planet: 'world' }
+          }
         }
-      }
-    ]
-  }]
+      ]
+    }]
+  }
 }
 ```
 
@@ -99,6 +108,20 @@ console.log(html) // <p>Hello world!</p>
 ```
 
 If you do this, you will want at least one other loader in order to integrate the returned source with webpack correctly. For most use cases, the [html-loader](https://github.com/webpack/html-loader) is recommended. If you want to export the html string directly for use in javascript or webpack plugins, we recommend the [source-loader](https://github.com/static-dev/source-loader). Whichever loader you choose, it should be the first loader, followed by reshape, as seen in the example above.
+
+## Custom Plugin Hooks
+
+Reshape loader adds a custom hook that webpack plugins can utilize called `beforeLoaderCompile` (sync). This hook exposes the options as they stand immediately before being passed to reshape for compilation, allowing them to be read and/or modified by plugins. For example, if you wanted to make a plugin that adds a `test` key to the locals, it might look like this.
+
+```js
+module.exports = class TestPlugin {
+  apply (compiler) {
+    compiler.plugin('beforeLoaderCompile', (options) => {
+      Object.assign(options, { test: 'wow' })
+    })
+  }
+}
+```
 
 ## License & Contributing
 
