@@ -99,7 +99,7 @@ test('dependencies reported correctly', (t) => {
 test('custom plugin hook works', (t) => {
   class CustomHookPlugin {
     apply (compiler) {
-      compiler.plugin('beforeLoaderCompile', (opts) => {
+      compiler.plugin('before-loader-process', (ctx, opts) => {
         Object.assign(opts.locals, { planet: 'changed' })
       })
     }
