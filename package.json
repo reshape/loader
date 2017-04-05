@@ -10,7 +10,7 @@
   "bugs": "https://github.com/reshape/loader/issues",
   "dependencies": {
     "reshape": "^0.4.1",
-    "reshape-include": "next"
+    "reshape-include": "^1.0.0"
   },
   "devDependencies": {
     "ava": "^0.19.0",
@@ -20,7 +20,7 @@
     "reshape-expressions": "^0.1.5",
     "snazzy": "^6.0.0",
     "source-loader": "^0.2.0",
-    "standard": "^9.0.2",
+    "standard": "^10.0.0",
     "sugarml": "^0.5.0",
     "webpack": "^2.3.2",
     "when": "^3.7.8"
