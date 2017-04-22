@@ -1,5 +1,7 @@
 # Reshape Webpack Loader
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/reshape/loader.svg)](https://greenkeeper.io/)
+
 [![npm](https://img.shields.io/npm/v/reshape-loader.svg?style=flat-square)](https://npmjs.com/package/reshape-loader)
 [![tests](https://img.shields.io/travis/reshape/loader.svg?style=flat-square)](https://travis-ci.org/reshape/loader?branch=master)
 [![dependencies](https://img.shields.io/david/reshape/loader.svg?style=flat-square)](https://david-dm.org/reshape/loader)
