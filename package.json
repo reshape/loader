@@ -22,7 +22,7 @@
     "source-loader": "^0.2.0",
     "standard": "^10.0.2",
     "sugarml": "^0.5.0",
-    "webpack": "^2.6.1",
+    "webpack": "^3.0.0",
     "when": "^3.7.8"
   },
   "engine": ">=6",
