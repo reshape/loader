@@ -115,8 +115,12 @@ test('custom plugin hook works', (t) => {
   })
 })
 
+test.only('multi output', (t) => {
+  return webpackCompile('multi')
+})
+
 // Utility: compile a fixture with webpack, return results
-function webpackCompile (name, config, qs = {}) {
+function webpackCompile (name, config = {}, qs = {}) {
   const testPath = path.join(fixtures, name)
   const outputPath = path.join(testPath, 'bundle.js')
 
