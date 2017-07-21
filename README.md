@@ -131,7 +131,6 @@ module.exports = {
         {
           loader: 'reshape-loader',
           options: {
-            locals: {},
             multi: [
               { locals: { greeting: 'hello' }, name: 'en' },
               { locals: { greeting: 'hola' }, name: 'es' }
@@ -148,6 +147,8 @@ module.exports = {
 const html = require('./index.html')
 console.log(html) // { en: "<p>hello!</p>", es: "<p>hola!</p>" }
 ```
+
+It should be noted that passing in anything as the `multi` option will return static html, regardless of any other options. If you want to use a template, you don't need the multi option, you can just execute the template with different sets of locals on the client side as needed.
 
 ## Custom Plugin Hooks
 

@@ -115,8 +115,17 @@ test('custom plugin hook works', (t) => {
   })
 })
 
-test.only('multi output', (t) => {
-  return webpackCompile('multi')
+test('multi output', (t) => {
+  return webpackCompile('multi', {
+    plugins: [exp()],
+    multi: [
+      { locals: { greeting: 'hello' }, name: 'en' },
+      { locals: { greeting: 'hola' }, name: 'es' }
+    ]
+  }).then(({outputPath, src}) => {
+    t.regex(src, /module\.exports = {"en":"<p>hello<\/p>\\n","es":"<p>hola<\/p>\\n"}/g)
+    fs.unlinkSync(outputPath)
+  })
 })
 
 // Utility: compile a fixture with webpack, return results
