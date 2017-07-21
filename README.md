@@ -109,7 +109,7 @@ console.log(html) // <p>Hello world!</p>
 
 If you do this, you will want at least one other loader in order to integrate the returned source with webpack correctly. For most use cases, the [html-loader](https://github.com/webpack/html-loader) is recommended. If you want to export the html string directly for use in javascript or webpack plugins, we recommend the [source-loader](https://github.com/static-dev/source-loader). Whichever loader you choose, it should be the first loader, followed by reshape, as seen in the example above.
 
-## Producing Multiple Outputs from a Single files
+## Producing Multiple Outputs from a Single File
 
 The reshape loader is unique in its ability to take in a single source file, and compile multiple outputs with different options for each output. This ability can be very useful for cases in which a single template is used with a set of different locals to produce variants purely from a data input, such as for internationalization.
 
