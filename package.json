@@ -13,16 +13,16 @@
     "reshape-include": "^1.0.0"
   },
   "devDependencies": {
-    "ava": "^0.19.1",
+    "ava": "^0.21.0",
     "coveralls": "^2.13.1",
-    "nyc": "^11.0.2",
+    "nyc": "^11.0.3",
     "reshape-custom-elements": "^0.1.0",
     "reshape-expressions": "^0.1.5",
     "snazzy": "^7.0.0",
-    "source-loader": "^0.2.0",
+    "source-loader": "^1.0.0",
     "standard": "^10.0.2",
     "sugarml": "^0.6.0",
-    "webpack": "^3.0.0",
+    "webpack": "^3.3.0",
     "when": "^3.7.8"
   },
   "engine": ">=6",
