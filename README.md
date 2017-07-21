@@ -31,7 +31,7 @@ module.exports = {
   module: {
     rules: [{
       test: /\.html$/,
-      loader: 'reshape',
+      loader: 'reshape-loader',
       options: { plugins: [/* plugins here */] }
     }]
   }
@@ -57,7 +57,7 @@ module.exports = {
   module: {
     rules: [{
       test: /\.html$/,
-      loader: 'reshape',
+      loader: 'reshape-loader',
       options: {
         plugins: (loaderContext) => {
           return [somePlugin({ file: loaderContext.resourcePath })]
@@ -88,9 +88,9 @@ module.exports = {
     rules: [{
       test: /\.html$/,
       use: [
-        { loader: 'html' },
+        { loader: 'source-loader' },
         {
-          loader: 'reshape',
+          loader: 'reshape-loader',
           options: {
             plugins: [expressions()],
             locals: { planet: 'world' }
@@ -108,6 +108,47 @@ console.log(html) // <p>Hello world!</p>
 ```
 
 If you do this, you will want at least one other loader in order to integrate the returned source with webpack correctly. For most use cases, the [html-loader](https://github.com/webpack/html-loader) is recommended. If you want to export the html string directly for use in javascript or webpack plugins, we recommend the [source-loader](https://github.com/static-dev/source-loader). Whichever loader you choose, it should be the first loader, followed by reshape, as seen in the example above.
+
+## Producing Multiple Outputs from a Single files
+
+The reshape loader is unique in its ability to take in a single source file, and compile multiple outputs with different options for each output. This ability can be very useful for cases in which a single template is used with a set of different locals to produce variants purely from a data input, such as for internationalization.
+
+In order to use multiple outputs, you can pass the `multi` option. This option should be an array of objects, each one will be merged with the base options (with priority given to the multi object), and used to produce a unique output. It is required that each `multi` object contains a `name` property, which is used to name the output. So for example, if we wanted to produce a static html result with a single template compiled with two different languages, it might look like this:
+
+```html
+<!-- index.html -->
+<p>{{ greeting }}!</p>
+```
+
+```js
+// webpack.config.js
+module.exports = {
+  module: {
+    rules: [{
+      test: /\.html$/,
+      use: [
+        { loader: 'source-loader' },
+        {
+          loader: 'reshape-loader',
+          options: {
+            multi: [
+              { locals: { greeting: 'hello' }, name: 'en' },
+              { locals: { greeting: 'hola' }, name: 'es' }
+            ]
+          }
+        }
+      ]
+    }]
+  }
+}
+```
+
+```js
+const html = require('./index.html')
+console.log(html) // { en: "<p>hello!</p>", es: "<p>hola!</p>" }
+```
+
+It should be noted that passing in anything as the `multi` option will return static html, regardless of any other options. If you want to use a template, you don't need the multi option, you can just execute the template with different sets of locals on the client side as needed.
 
 ## Custom Plugin Hooks
 

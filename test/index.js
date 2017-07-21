@@ -115,8 +115,34 @@ test('custom plugin hook works', (t) => {
   })
 })
 
+test('multi output', (t) => {
+  return webpackCompile('multi', {
+    plugins: [exp()],
+    multi: [
+      { locals: { greeting: 'hello' }, name: 'en' },
+      { locals: { greeting: 'hola' }, name: 'es' }
+    ]
+  }).then(({outputPath, src}) => {
+    t.regex(src, /module\.exports = {"en":"<p>hello<\/p>\\n","es":"<p>hola<\/p>\\n"}/g)
+    fs.unlinkSync(outputPath)
+  })
+})
+
+test('multi output without name property errors', (t) => {
+  return webpackCompile('multi', {
+    plugins: [exp()],
+    multi: [
+      { locals: { greeting: 'hello' } },
+      { locals: { greeting: 'hola' } }
+    ]
+  }).catch(({err, outputPath}) => {
+    t.regex(err.toString(), /multi options must have a "name" property/)
+    fs.unlinkSync(outputPath)
+  })
+})
+
 // Utility: compile a fixture with webpack, return results
-function webpackCompile (name, config, qs = {}) {
+function webpackCompile (name, config = {}, qs = {}) {
   const testPath = path.join(fixtures, name)
   const outputPath = path.join(testPath, 'bundle.js')
 
