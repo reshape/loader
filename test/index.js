@@ -128,6 +128,19 @@ test('multi output', (t) => {
   })
 })
 
+test('multi output without name property errors', (t) => {
+  return webpackCompile('multi', {
+    plugins: [exp()],
+    multi: [
+      { locals: { greeting: 'hello' } },
+      { locals: { greeting: 'hola' } }
+    ]
+  }).catch(({err, outputPath}) => {
+    t.regex(err.toString(), /multi options must have a "name" property/)
+    fs.unlinkSync(outputPath)
+  })
+})
+
 // Utility: compile a fixture with webpack, return results
 function webpackCompile (name, config = {}, qs = {}) {
   const testPath = path.join(fixtures, name)
