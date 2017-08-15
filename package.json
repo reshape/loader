@@ -13,7 +13,7 @@
     "reshape-include": "^1.0.0"
   },
   "devDependencies": {
-    "ava": "^0.21.0",
+    "ava": "^0.22.0",
     "coveralls": "^2.13.1",
     "nyc": "^11.0.3",
     "reshape-custom-elements": "^0.1.0",
