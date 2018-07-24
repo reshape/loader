@@ -9,12 +9,12 @@
   },
   "bugs": "https://github.com/reshape/loader/issues",
   "dependencies": {
-    "reshape": "^0.5.1",
+    "reshape": "^1.0.0",
     "reshape-include": "^1.0.0"
   },
   "devDependencies": {
     "ava": "^0.25.0",
-    "coveralls": "^3.0.1",
+    "coveralls": "^3.0.2",
     "nyc": "^12.0.2",
     "reshape-custom-elements": "^0.1.0",
     "reshape-expressions": "^0.1.5",
