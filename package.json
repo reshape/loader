@@ -21,7 +21,7 @@
     "snazzy": "^7.1.1",
     "source-loader": "^1.0.0",
     "standard": "^11.0.1",
-    "sugarml": "^0.6.0",
+    "sugarml": "^0.7.0",
     "webpack": "^3.3.0",
     "when": "^3.7.8"
   },
